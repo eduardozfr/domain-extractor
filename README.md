@@ -1,5 +1,10 @@
-## domain-extractor
+# domain-extractor
 Código HTML para extrair domínios válidos de um texto, seja ele digitado, colado ou carregado a partir de um arquivo.txt. 
+
+## Para uso ou exemplo, acesse
+```bash
+https://api.fiber.app.br/extract
+```
 
 ## Ele funciona da seguinte maneira:
 
