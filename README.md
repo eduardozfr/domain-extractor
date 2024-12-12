@@ -19,6 +19,6 @@ Código HTML para extrair domínios válidos de um texto, seja ele digitado, col
 ## Contribuições
 Se você deseja contribuir com este projeto, fique à vontade para fazer um fork e abrir pull requests com melhorias ou correções! 
 <br>
-Licença
+## Licença
 Este projeto está licenciado sob a Licença MIT.
 Esse conteúdo está formatado corretamente para o GitHub, com seções e código bem organizados. A estrutura também segue boas práticas para facilitar a instalação e configuração do projeto.
