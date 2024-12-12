@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extrator de Domínios</title>
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos Gerais */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        /* Inputs e Áreas de Texto */
+        textarea, input[type="file"] {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        textarea:focus, input[type="file"]:focus {
+            border-color: #4CAF50;
+            background-color: #fff;
+        }
+
+        /* Botões */
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px; /* Adicionando margem para o botão de copiar */
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #copyBtn {
+            background-color: #007BFF;
+        }
+
+        #copyBtn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Ícones */
+        .icon {
+            margin-right: 10px;
+        }
+
+        /* Caixa de Resultados */
+        #dominioOutput {
+            width: 100%;
+            height: 150px; /* Limita o tamanho da caixa */
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            overflow-y: auto; /* Ativa a rolagem vertical */
+            white-space: pre-wrap; /* Quebra de linha quando necessário */
+            word-wrap: break-word; /* Quebra palavras longas */
+        }
+
+        /* Confirmação de Cópia */
+        .confirmation {
+            margin-top: 20px;
+            text-align: center;
+            color: #28a745;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            button, textarea, input[type="file"] {
+                font-size: 14px;
+            }
+
+            /* Ajusta a caixa de resultados em telas pequenas */
+            #dominioOutput {
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Extrator de Domínios</h1>
+
+        <!-- Formulário para carregar ou colar texto -->
+        <textarea id="inputText" placeholder="Cole ou digite o texto contendo domínios aqui..."></textarea>
+        <input type="file" id="fileInput" accept=".txt">
+
+        <!-- Botão de processar texto -->
+        <button onclick="processarTexto()">
+            <i class="fas fa-search icon"></i> Extrair Domínios
+        </button>
+
+        <!-- Exibição dos domínios extraídos -->
+        <div id="dominioOutput" readonly></div>
+
+        <!-- Botão para copiar -->
+        <button id="copyBtn" onclick="copiarDominios()" style="display:none;">
+            <i class="fas fa-copy icon"></i> Copiar Domínios
+        </button>
+
+        <!-- Mensagem de confirmação -->
+        <div id="confirmation" class="confirmation">Domínios copiados para a área de transferência!</div>
+    </div>
+
+    <script>
+        function processarTexto() {
+            let inputText = document.getElementById("inputText").value;
+
+            // Verifica se foi carregado um arquivo
+            let fileInput = document.getElementById("fileInput");
+            if (fileInput.files.length > 0) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    inputText = e.target.result;
+                    extrairDominios(inputText);
+                };
+                reader.readAsText(fileInput.files[0]);
+            } else {
+                extrairDominios(inputText);
+            }
+        }
+
+        // Expressão regular para validar domínios
+        function extrairDominios(texto) {
+            const regex = /(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,})(?:\/\S*)?/g;
+            let dominios = [];
+            let match;
+
+            while ((match = regex.exec(texto)) !== null) {
+                dominios.push(match[1]);
+            }
+
+            // Exibir os domínios extraídos, separados apenas por vírgula (sem espaços)
+            document.getElementById("dominioOutput").textContent = dominios.join(',');
+
+            // Exibir o botão de copiar
+            document.getElementById("copyBtn").style.display = "block";
+        }
+
+        function copiarDominios() {
+            let dominioOutput = document.getElementById("dominioOutput");
+            navigator.clipboard.writeText(dominioOutput.textContent).then(() => {
+                // Exibir mensagem de confirmação
+                let confirmation = document.getElementById("confirmation");
+                confirmation.style.display = "block";
+                setTimeout(() => {
+                    confirmation.style.display = "none";
+                }, 2000);
+            });
+        }
+    </script>
+
+</body>
+</html>
