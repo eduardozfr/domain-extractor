@@ -26,4 +26,3 @@ Se você deseja contribuir com este projeto, fique à vontade para fazer um fork
 <br>
 ## Licença
 Este projeto está licenciado sob a Licença MIT.
-Esse conteúdo está formatado corretamente para o GitHub, com seções e código bem organizados. A estrutura também segue boas práticas para facilitar a instalação e configuração do projeto.
